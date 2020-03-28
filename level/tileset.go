@@ -10,12 +10,18 @@ import (
 )
 
 type Tileset struct {
-	tiles []image.Image
+	Tiles      []image.Image
+	TileWidth  int
+	TileHeight int
 }
 
 // CreateTileset parses a tiled.Tileset spritesheet.
 func CreateTileset(tileset *tiled.Tileset) (*Tileset, error) {
-	ts := &Tileset{}
+	ts := &Tileset{
+		TileWidth:  tileset.TileWidth,
+		TileHeight: tileset.TileHeight,
+	}
+
 	imagePath := filepath.Join("assets", tileset.Image.Source)
 
 	img, err := imgutil.ReadFile(imagePath)
@@ -37,7 +43,7 @@ func CreateTileset(tileset *tiled.Tileset) (*Tileset, error) {
 			yCord := yIndex * tileset.TileHeight
 			rect := image.Rect(xCord, yCord, xCord+tileset.TileWidth, yCord+tileset.TileHeight)
 			subImg := subImgaer.SubImage(rect)
-			ts.tiles = append(ts.tiles, subImg)
+			ts.Tiles = append(ts.Tiles, subImg)
 		}
 	}
 	return ts, nil

@@ -2,6 +2,7 @@ package level
 
 import (
 	"encoding/xml"
+	"image"
 	"io/ioutil"
 	"path/filepath"
 
@@ -26,6 +27,23 @@ func NewLevel(width int, height int) *Level {
 		Tiles:  makeTiles(width, height),
 	}
 	return l
+}
+
+// MapWidth returns the map width in pixels.
+func (lvl *Level) MapWidth() int {
+	return lvl.Width * lvl.Tileset.TileWidth
+}
+
+// MapHeight returns the map height in pixels.
+func (lvl *Level) MapHeight() int {
+	return lvl.Height * lvl.Tileset.TileHeight
+}
+
+// RectAtTile returns the rect with the coordinates of tile (x, y).
+func (lvl *Level) RectAtTile(x int, y int) image.Rectangle {
+	x0 := x * lvl.Tileset.TileWidth
+	y0 := y * lvl.Tileset.TileHeight
+	return image.Rect(x0, y0, x0+lvl.Tileset.TileWidth, y0+lvl.Tileset.TileHeight)
 }
 
 // ParseMap parses the given tiled tmx-map and returns the corresponding level.
